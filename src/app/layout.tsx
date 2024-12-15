@@ -7,6 +7,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 
 import { TRPCReactProvider } from "@/trpc/react";
 
+import { ThemeProvider } from "@/components/theme-provider"
+
 export const metadata: Metadata = {
   title: "GithubAI",
   description: "GithubAI is a tool for developers to generate code snippets and documentation from GitHub repositories.",
@@ -20,7 +22,15 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" className={`${GeistSans.variable}`}>
         <body>
-          <TRPCReactProvider>{children}</TRPCReactProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+
+          >
+            <TRPCReactProvider>{children}</TRPCReactProvider>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
