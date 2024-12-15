@@ -8,6 +8,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { TRPCReactProvider } from "@/trpc/react";
 
 import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "GithubAI",
@@ -27,9 +28,9 @@ export default function RootLayout({
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
-
           >
             <TRPCReactProvider>{children}</TRPCReactProvider>
+            <Toaster richColors  position="top-center" />
           </ThemeProvider>
         </body>
       </html>

@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
+import useProject from "@/hooks/use-project"
 import { cn } from "@/lib/utils"
 import { Bot, CreditCard, LayoutDashboard, Plus, Presentation } from "lucide-react"
 import { useTheme } from "next-themes"
@@ -32,26 +33,16 @@ const items = [
     }
 ]
 
-const projects = [
-    {
-        name: 'Project 01'
-    },
-    {
-        name: 'Project 02'
-    },
-    {
-        name: 'Project 03'
-    },
-]
 export function AppSidebar() {
     const pathname = usePathname()
-    const {open: sidebarOpen} = useSidebar()
-    const {theme} = useTheme()
+    const { open: sidebarOpen } = useSidebar()
+    const { theme } = useTheme()
+    const { projects, projectId, setProjectId } = useProject()
     return (
         <Sidebar collapsible="icon" variant="floating">
             <SidebarHeader>
                 <div className="flex items-center gap-2 ">
-                    <Image src={theme === 'dark' ? '/Scorp_Logo_Light.png' :'/Scorp_Logo_Dark.png'} alt="logo" width={40} height={40}/>
+                    <Image src={theme === 'dark' ? '/Scorp_Logo_Light.png' : '/Scorp_Logo_Dark.png'} alt="logo" width={40} height={40} />
                     {sidebarOpen && (
                         <h1 className="text-xl font-bold text-primary/80 ">
                             GitHubAI
@@ -71,9 +62,9 @@ export function AppSidebar() {
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
                                         <Link href={item.url} className={cn({
-                                            '!bg-primary !text-white' : pathname === item.url
+                                            '!bg-primary !text-white dark:!text-black': pathname === item.url
                                         })}>
-                                            <item.icon/>
+                                            <item.icon />
                                             <span>{item.title}</span>
                                         </Link>
                                     </SidebarMenuButton>
@@ -89,14 +80,15 @@ export function AppSidebar() {
                     </SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {projects.map(project => (
+                            {projects?.map(project => (
                                 <SidebarMenuItem key={project.name}>
                                     <SidebarMenuButton asChild>
-                                        <div className="">
+                                        <div onClick={() => setProjectId(project.id)}>
                                             <div className={cn(
                                                 'rounded-sm border size-6 flex items-center justify-center text-sm bg-white text-primary',
                                                 {
-                                                    'bg-primary text-white' : true
+                                                    'bg-primary text-white dark:text-black': project.id === projectId,
+                                                    'dark:bg-transparent': project.id !== projectId
                                                 }
                                             )}>
                                                 {project.name[0]?.toUpperCase()}
@@ -113,7 +105,7 @@ export function AppSidebar() {
                                 <SidebarMenuItem>
                                     <Link href={'/create'}>
                                         <Button size={'sm'} variant={'outline'} className="w-fit">
-                                            <Plus/>
+                                            <Plus />
                                             Create Project
                                         </Button>
                                     </Link>
