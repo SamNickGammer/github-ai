@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import useRefetch from '@/hooks/use-refetch'
 import { api } from '@/trpc/react'
-import React from 'react'
+import { Loader2 } from 'lucide-react'
+import React, { Fragment } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
@@ -63,8 +64,17 @@ const CreatePage = () => {
                         placeholder='GitHub Token (Optional)'
                     />
                     <div className="h-4"></div>
-                    <Button type='submit' disabled={createProject.isPending}>
-                        Create Projects
+                    <Button type='submit' disabled={createProject.isPending} >
+                        {createProject.isPending ? (
+                            <Fragment>
+                                <Loader2 className="animate-spin" />
+                                Please Wait
+                            </Fragment>
+                        ) : (
+                            <Fragment>
+                                Create Projects
+                            </Fragment>
+                        )}
                     </Button>
                 </form>
             </div>
