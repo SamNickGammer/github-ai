@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { Document } from '@langchain/core/documents'
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 const model = genAI.getGenerativeModel({
@@ -41,4 +42,34 @@ export const aiSummrariseCommit = async (diff: string) => {
     console.log(response, response.response.text())
 
     return response.response.text();
+}
+
+export async function summariseCode(doc: Document) {
+    console.log("Getting Summery for: ", doc.metadata.source)
+    try {
+        const code = doc.pageContent.slice(0,10000) // Limit to 10k characters
+        const response = await model.generateContent([
+            `You are an intelligent senior software engineer who specialises in onboarding junior software engineers onto projects`,
+            `You are onboarding a junior software engineer and explaining to them the propose of the ${doc.metadata.source} file
+                Here is the Code:
+                ---
+                ${code}
+                ---
+    
+            Give a summary not more than 100 words of the code above`,
+        ]);
+        return response.response.text();
+    } catch (e) {
+        return ''
+    }
+}
+
+
+export async function generateEmbedding(summary: string) {
+    const modal = genAI.getGenerativeModel({
+        model: 'text-embedding-004'
+    })
+    const result = await modal.embedContent(summary)
+    const embedding = result.embedding;
+    return embedding.values;
 }
